@@ -1,29 +1,19 @@
-require "atmos.env.pico"
-require "atmos.env.sdl"
-
-func() {
+func () {
     print "[Player (+)]"
 
     var health = 3
 
-    watching :player_dead {
-        par {
-            every :player_damaged {
-                set health = (health - 1)
-
-                print("Health => (" ++ health ++ ")")
-
-                if (health <= 0) {
-                    ;; This emit only needs to broadcast locally!
-                    ;; GameScreen ends automatically on Player task end
-
-                    emit(:player_dead)
-                }
-            }
-        } with {
-            ;; Player Draw
-            every :draw {}
+    par_or {
+        loop {
+            ;; should work as before (every :player_damaged)
+            ;; but I just found a bug in the language
+            await :player_damaged
+            set health = (health - 1)
+            print("Health => (" ++ health ++ ")")
+            until (health == 0)
         }
+    } with {
+        every :draw {}
     }
 
     print "[Player (-)]"

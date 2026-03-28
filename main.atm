@@ -1,8 +1,7 @@
 require "atmos.env.pico"
-require "atmos.env.sdl"
 
 val TitleScreen = require "GameStates/TitleScreen"
-val GameScreen = require "GameStates/GameScreen"
+val GameScreen  = require "GameStates/GameScreen"
 val ScoreScreen = require "GameStates/ScoreScreen"
 
 do {
