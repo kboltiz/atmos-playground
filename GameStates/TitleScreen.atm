@@ -2,7 +2,7 @@ require "atmos.env.pico"
 require "atmos.env.sdl"
 
 func() {
-    print "[TitleScreen (+)]"
+    print "[TitleScreen (+)] Press Space To Start!"
 
     watching :key.dn, :Space {
         every :draw {}

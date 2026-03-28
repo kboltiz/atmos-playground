@@ -11,7 +11,7 @@ func() {
             every :player_damaged {
                 set health = (health - 1)
 
-                print("Health =>", health)
+                print("Health => (" ++ health ++ ")")
 
                 if (health <= 0) {
                     ;; This emit only needs to broadcast locally!

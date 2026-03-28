@@ -1,8 +1,9 @@
 require "atmos.env.pico"
 require "atmos.env.sdl"
 
-func() {
-    print "[ScoreScreen (+)]"
+func(score) {
+    print "[ScoreScreen (+)] Press Space To Restart Game!"
+    print("Score (" ++ score ++ ")")
 
     watching :key.dn, :Space {
         every :draw {}
