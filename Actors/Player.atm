@@ -1,0 +1,30 @@
+require "atmos.env.pico"
+require "atmos.env.sdl"
+
+func() {
+    print "[Player (+)]"
+
+    var health = 3
+
+    watching :player_dead {
+        par {
+            every :player_damaged {
+                set health = (health - 1)
+
+                print("Health =>", health)
+
+                if (health <= 0) {
+                    ;; This emit only needs to broadcast locally!
+                    ;; GameScreen ends automatically on Player task end
+
+                    emit(:player_dead)
+                }
+            }
+        } with {
+            ;; Player Draw
+            every :draw {}
+        }
+    }
+
+    print "[Player (-)]"
+}

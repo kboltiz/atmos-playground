@@ -1,0 +1,37 @@
+require "atmos.env.pico"
+require "atmos.env.sdl"
+
+val Player = require "./Actors/Player"
+val Enemy = require "./Actors/Enemy"
+
+func() {
+    print "[GameScreen (+)]"
+
+    ;; Game Session Score
+    var Score = 0
+
+    ;; Player Init
+    pin pTask = task(Player)
+    val p = spawn pTask()
+
+    ;; Enemies Init
+    pin eTask = tasks(3)
+
+    watching p {
+        par {
+            every :draw {}
+        } with {
+            loop i in 3 {
+                print "Spawning Enemy!"
+                spawn [eTask] Enemy(math.random(1,3))
+
+                await @.500
+            }
+        } with {
+            ;; 1 Point Awarded Per Second
+            set Score = Score + 1
+        }
+    }
+
+    print "[GameScreen (-)]"
+}

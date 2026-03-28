@@ -1,0 +1,25 @@
+require "atmos.env.pico"
+require "atmos.env.sdl"
+
+func() {
+    print "[Enemy (+)]"
+
+    val attackRate = 1
+
+    watching :player_dead {
+        par {
+            every @attackRate {
+                print "Pew!"
+
+                ;; Sending damage signal to the GameScreen
+                ;; and also all its children (include Player)
+                emit [3] (:player_damaged)
+            }
+        } with {
+            ;; Enemy Draw
+            every :draw {}
+        }
+    }
+
+    print "[Enemy (-)]"
+}

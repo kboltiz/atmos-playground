@@ -1,0 +1,12 @@
+require "atmos.env.pico"
+require "atmos.env.sdl"
+
+func() {
+    print "[TitleScreen (+)]"
+
+    watching :key.dn, :Space {
+        every :draw {}
+    }
+
+    print "[TitleScreen (-)]"
+}
