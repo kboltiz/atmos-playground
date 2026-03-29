@@ -1,6 +1,3 @@
-require "atmos.env.pico"
-require "atmos.env.sdl"
-
 func(score) {
     print "[ScoreScreen (+)] Press Space To Restart Game!"
     print("Score (" ++ score ++ ")")

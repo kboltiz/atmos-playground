@@ -1,18 +1,14 @@
-require "atmos.env.pico"
-require "atmos.env.sdl"
+val Player = require "Actors/Player"
+val Enemy  = require "Actors/Enemy"
 
-val Player = require "./Actors/Player"
-val Enemy = require "./Actors/Enemy"
-
-func() {
+func () {
     print "[GameScreen (+)]"
 
     ;; Game Session Score
     var Score = 0
 
     ;; Player Init
-    pin pTask = task(Player)
-    val p = spawn pTask()
+    pin p = spawn Player()
 
     ;; Enemies Init
     pin eTask = tasks(3)
