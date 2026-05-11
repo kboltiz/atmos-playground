@@ -5,8 +5,6 @@ func () {
 
     par_or {
         loop {
-            ;; should work as before (every :player_damaged)
-            ;; but I just found a bug in the language
             await :player_damaged
             set health = (health - 1)
             print("Health => (" ++ health ++ ")")
