@@ -1,0 +1,36 @@
+require "atmos.env.clock"
+
+func T() {
+    par {
+        every @1 {
+            print("tick")
+        }
+    } with {
+        every :X {
+            print("X")
+        }
+    }
+}
+
+func EmitX() {
+    every @1 {
+        emit [:global] (:X)
+    }
+}
+
+pin ts = tasks()
+
+spawn [ts] T()
+spawn EmitX()
+
+await @3
+
+print("OFF")
+toggle ts(false)
+
+await @5
+
+print("ON")
+toggle ts(true)
+
+await @3
