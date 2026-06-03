@@ -1,0 +1,32 @@
+require "atmos.env.pico"
+set pico = require "pico"
+
+pico.zet.window @{ title="Screenshot Test" }
+pico.zet.dim @{ '!', w=640, h=360 }
+
+func Main() {
+    spawn {
+        every :draw {
+            pico.output.draw.rect(@{
+                "%",
+                x=0.5, y=0.5,
+                w=0.4, h=0.4,
+                anchor="C",
+                color=@{ "%", r=1, g=0, b=0 }
+            })
+        }
+    }
+
+    await @3
+
+    val screenshot = pico.output.screenshot()
+
+    every :draw {
+        pico.output.draw.image(
+            screenshot,
+            @{ "%", x=0.5, y=0.5, w=1, h=1, anchor="C" }
+        )
+    }
+}
+
+await Main()
