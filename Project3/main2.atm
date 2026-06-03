@@ -19,18 +19,15 @@ func EmitX() {
 }
 
 pin ts = tasks()
-
 spawn [ts] T()
 spawn EmitX()
 
 await @3
-
 print("OFF")
-toggle ts(false)
 
-await @5
+toggle :Freeze with :X {
+    await @5
+}
 
 print("ON")
-toggle ts(true)
-
 await @3
