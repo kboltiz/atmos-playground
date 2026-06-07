@@ -1,0 +1,41 @@
+require "atmos.env.pico"
+set pico = require "pico"
+
+pico.zet.window @{ title="Hierarchy Test" }
+pico.zet.dim @{ '!', w=640, h=360 }
+
+pico.push()
+defer {
+    pico.pop()
+}
+
+pico.layer.empty(
+    :world,
+    :overlay,
+    false,
+    @{ "%", x=0.5, y=0.5, w=1, h=1 }
+)
+
+every :draw {
+    pico.zet.layer(:world)
+
+    pico.zet.pencil @{ color=@{ "%", r=1, g=0, b=0 } }
+    pico.output.draw.rect(@{
+        "%",
+        x=0.5, y=0.5,
+        w=0.5, h=0.5,
+        anchor="C"
+    })
+
+    pico.zet.layer(:overlay)
+
+    pico.zet.pencil @{ color=@{ "%", r=0, g=1, b=0 } }
+    pico.output.draw.oval(@{
+        "%",
+        x=0.5, y=0.5,
+        w=0.25, h=0.25,
+        anchor="C"
+    })
+
+    pico.zet.layer(:world)
+}
