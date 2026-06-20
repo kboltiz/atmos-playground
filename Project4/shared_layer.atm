@@ -1,0 +1,67 @@
+require "atmos.env.pico"
+set pico = require "pico"
+
+set W = 360
+set H = 360
+set ASPECT_RATIO = W/H
+
+pico.zet.window @{ title="Layer Repro" }
+pico.zet.dim @{ '!', w=W, h=H }
+
+
+;; Child: spawned in parallel by Parent. Tries to draw into
+;; the SAME layer id (:card) that Parent created and is scaling.
+func Child() {
+    every :draw {
+        ;; attempting to "join" the parent's layer from a
+        ;; different task (Child's) draw
+        pico.zet.layer(:card)
+        
+        pico.zet.pencil @{ color=@{"%", r=1, g=0, b=0, a=1} }  ;; red
+        pico.output.draw.rect(@{
+            "%", x=1, y=0.5, w=0.3, h=0.3, anchor="E"
+        })
+
+        pico.zet.layer(:world)
+    }
+}
+
+
+;; Parent: creates the :card layer, scales/positions it via
+;; pico.zet.scene, and spawns Child to (attempt to) draw
+;; alongside it in the same space.
+func Parent() {
+    val rect = @{"%", x=0.5, y=0.5, w=0.4, h=0.4, anchor="C"}
+
+    ;; creating layer
+    pico.layer.empty(:world, :card, false, rect)
+
+    ;; spawn child after layer exists
+    pin child = spawn Child()
+
+    every :draw {
+        pico.zet.layer(:card)
+
+        ;; commenting this section with the clear() ------------
+        pico.output.clear()
+
+        pico.zet.pencil @{ color=@{"%", r=1, g=1, b=1, a=1} }  ;; white
+        pico.zet.effect @{ color=@{"%", r=0, g=0, b=1, a=1} }  ;; blue bg
+        pico.output.draw.text("parent", @{
+            "%", x=0.5, y=0.5, h=0.2, anchor="C"
+        })
+        ;; allows the red rect in child task to be visible -----
+
+        pico.zet.scene @{
+            target = @{ '%', anchor=rect.anchor,
+                x=rect.x, y=rect.y,
+                w=rect.w,
+                h=rect.h,
+            }
+        }
+
+        pico.zet.layer(:world)
+    }
+}
+
+await Parent()
