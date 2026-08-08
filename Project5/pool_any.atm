@@ -1,0 +1,44 @@
+require "atmos.env.clock"
+
+val task Dier (id, delay) {
+    await(delay)
+    id                  ;; terminates with its id as its value
+}
+
+pin ps = tasks()
+loop i in 3 {
+    spawn @ps Dier(i, i * 1s)
+}
+
+;; two tasks awaiting the same pool
+spawn {
+    loop {
+        val i = await :any ps
+        print("A saw death of " ++ i)
+    }
+}
+spawn {
+    loop {
+        val i = await :any ps
+        print("B saw death of " ++ i)
+    }
+}
+
+;; same two tasks would both wake on a plain event: the control case
+spawn {
+    loop {
+        await :ping
+        print("A saw :ping")
+    }
+}
+spawn {
+    loop {
+        await :ping
+        print("B saw :ping")
+    }
+}
+
+await(3500ms)
+print("-- now a plain emit --")
+emit :ping
+await(500ms)
